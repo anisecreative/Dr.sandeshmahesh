@@ -1,0 +1,113 @@
+/* Hero, compact trust timeline, WhatsApp band, check-in extras — strictly zero overflow. */
+.hero{position:relative;padding:56px 0 54px;background-color:var(--night);background-image:url('../assets/hero/hero-bg.webp');background-size:cover;background-position:75% 25%;background-repeat:no-repeat;color:#fff;isolation:isolate;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(95deg,rgba(36,19,29,.94) 0%,rgba(36,19,29,.84) 44%,rgba(36,19,29,.52) 76%,rgba(36,19,29,.38) 100%),linear-gradient(180deg,rgba(36,19,29,.35) 0%,rgba(36,19,29,.72) 100%)}
+@media(min-width:900px){.hero{padding:68px 0 66px}}
+.hero .wrap{display:grid;gap:28px;align-items:center}
+@media(min-width:900px){.hero .wrap{grid-template-columns:1.18fr .82fr;gap:48px}}
+.pill-glass{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(233,185,198,.3);font-size:.78rem;font-weight:700;color:#f6dce4;margin-bottom:14px}
+.pill-glass i{width:7px;height:7px;border-radius:50%;background:var(--accent-l);display:inline-block}
+.hero h1{color:#fff;font-size:clamp(2.05rem,5.4vw,3.55rem);max-width:15ch;line-height:1.08;margin-bottom:.32em}
+.hero h1 em{font-style:italic;color:var(--accent-l);font-weight:500}
+.hero-sub{font-size:1rem;color:#eadde3;max-width:32rem;margin-bottom:0}
+.hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 18px}
+.chips-glass{list-style:none;display:flex;flex-wrap:wrap;gap:8px 18px;padding:0;margin:0}
+.chips-glass li{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:.84rem;color:#dfcdd6}
+.chips-glass svg{width:16px;height:16px;stroke:var(--accent-l);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.hero-card{padding:22px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(233,185,198,.25);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff;box-shadow:0 26px 50px -28px rgba(0,0,0,.65);min-width:0}
+.hero-card .eyebrow{color:var(--accent-l)}
+.hero-card h3{font-family:'Fraunces',Georgia,serif;color:#fff;font-size:1.25rem;font-weight:600}
+.hero-card p{color:#e6d6de;font-size:.88rem;margin-bottom:10px}
+.dots{display:flex;gap:5px;margin:12px 0 16px}.dots i{flex:1;height:4px;border-radius:5px;background:rgba(255,255,255,.24)}.dots i:first-child{background:var(--accent-l)}
+
+/* Booking section: strictly contained 2-col layout */
+.how{display:grid;gap:24px;grid-template-columns:minmax(0,1fr);align-items:start}
+@media(min-width:900px){.how{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:36px}}
+.how>*{min-width:0;max-width:100%}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{position:relative;padding:0 0 18px 46px}
+.tl li::before{content:'';position:absolute;left:15px;top:34px;bottom:2px;width:2px;background:var(--line)}
+.tl li:last-child{padding-bottom:0}.tl li:last-child::before{display:none}
+.tl .n{position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:var(--deep);color:#fff;font-size:.82rem;font-weight:800;display:grid;place-items:center}
+.tl strong{display:block;font-size:.96rem;margin-bottom:2px}
+.tl .t{color:var(--mute);font-size:.88rem}
+.ready{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin-top:16px}
+.ready h3{margin-bottom:.45em;font-size:.98rem}
+.ready ul{list-style:none;padding:0;margin:0 0 12px}
+.ready li{padding-left:22px;position:relative;margin-bottom:6px;color:var(--mute);font-size:.88rem}
+.ready li::before{content:'';position:absolute;left:2px;top:.5em;width:10px;height:6px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg)}
+
+/* WhatsApp band — strictly inside container */
+.wa-band{margin-top:24px;width:100%;max-width:100%;overflow:hidden;background:linear-gradient(135deg,var(--accent) 0%,var(--deep) 100%);color:#fff;border-radius:20px;padding:24px;display:grid;grid-template-columns:minmax(0,1fr);gap:18px;box-shadow:0 24px 48px -30px rgba(59,26,43,.7)}
+@media(min-width:860px){.wa-band{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:center;padding:30px 34px;gap:36px}}
+.wa-band>*{min-width:0;max-width:100%}
+.wa-band .eyebrow{color:var(--accent-l)}
+.wa-band h3{font-family:'Fraunces',Georgia,serif;color:#fff;font-size:clamp(1.28rem,2.8vw,1.72rem);font-weight:600}
+.wa-band p{color:#f3e2e8;font-size:.9rem;margin:0}
+.wa-band label{color:#fff}
+.wa-band input,.wa-band select{border-color:transparent}
+.wa-band .note{color:#edd4dd;margin:0;font-size:.8rem}
+.btn.wa{background:#25D366;color:#06260f!important;font-size:.94rem;padding:13px 20px;width:100%}
+.btn.wa:hover{background:#1ebe5b}
+
+/* Check-in extras */
+.ci-insight{margin-top:12px;padding:12px 14px;border-left:3px solid var(--accent);background:var(--tint);border-radius:0 10px 10px 0}
+.ci-insight p{margin:0 0 4px;font-weight:600;font-size:.88rem}
+.ci-skip{background:none;border:0;color:var(--mute);text-decoration:underline;cursor:pointer;font:600 .84rem 'Plus Jakarta Sans',sans-serif;padding:8px 0}
+
+/* Bespoke Project 1 OBGYN Hero + True Frosted-Glass Pop-ups + Clean Button Borders */
+.hero-cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin:24px 0 20px}
+
+@keyframes smooth-sheen{0%{transform:translateX(-150%) skewX(-22deg)}72%{transform:translateX(270%) skewX(-22deg)}100%{transform:translateX(270%) skewX(-22deg)}}
+@keyframes gentle-arrow{0%,100%{transform:translateX(0)}45%{transform:translateX(5px)}}
+@keyframes icon-beat{0%,100%{transform:scale(1)}40%{transform:scale(1.1)}70%{transform:scale(1)}}
+
+.btn-checkin-luxe{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:12px;padding:7px 16px 7px 8px;min-height:56px;border-radius:999px;text-decoration:none;font:800 .95rem 'Plus Jakarta Sans',sans-serif;color:var(--night)!important;background:#fff;border:1px solid rgba(255,255,255,.95);box-shadow:0 16px 38px -8px rgba(233,185,198,.58);transition:transform .2s ease,box-shadow .2s ease}
+.btn-checkin-luxe::before{content:'';position:absolute;top:0;left:0;width:44%;height:100%;background:linear-gradient(90deg,transparent,rgba(233,185,198,.52),transparent);transform:translateX(-150%) skewX(-22deg);animation:smooth-sheen 1.9s ease-in-out infinite;pointer-events:none}
+.btn-checkin-luxe:hover{transform:translateY(-2px) scale(1.015);box-shadow:0 22px 44px -8px rgba(233,185,198,.78)}
+.btn-checkin-luxe:active{transform:translateY(1px) scale(.99)}
+.btn-checkin-luxe .btn-illus{width:40px;height:40px;border-radius:50%;background:linear-gradient(145deg,#A14460 0%,#70273D 100%);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex:none;box-shadow:0 6px 14px -6px rgba(112,39,61,.65)}
+.btn-checkin-luxe .btn-illus svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;animation:icon-beat 1.6s ease-in-out infinite}
+.btn-checkin-luxe .btn-copy{display:flex;flex-direction:column;line-height:1.18;text-align:left}
+.btn-checkin-luxe .btn-copy strong{font-size:.94rem;font-weight:800;color:var(--night)}
+.btn-checkin-luxe .btn-copy small{font-size:.7rem;font-weight:700;color:var(--accent);letter-spacing:.02em;margin-top:1px}
+.btn-checkin-luxe.full{width:100%;justify-content:space-between}
+.btn-checkin-luxe .pill-go{margin-left:2px;color:var(--accent);font-size:1.15rem;font-weight:900;display:inline-flex;align-items:center}
+.btn-checkin-luxe .pill-go span{display:inline-block;animation:gentle-arrow 1.4s ease-in-out infinite}
+
+.btn.hero-book-glass{background:rgba(255,255,255,.12);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid rgba(255,255,255,.32);color:#fff!important;min-height:54px;padding:12px 24px}
+.btn.hero-book-glass:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.55)}
+
+/* Clean, crisp borders on slot/number buttons (zero weird inset/double borders) */
+.slot-btn{border:1.5px solid var(--line)!important;box-shadow:none!important;background:#fff!important}
+.slot-btn:hover{border-color:var(--accent)!important;background:var(--tint)!important}
+.slot-btn.on{background:var(--accent)!important;border-color:var(--accent)!important;color:#fff!important}
+.bk-prog span{border:1.5px solid var(--line);box-shadow:none;background:#fff}
+.bk-prog span.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.bk-prog span.done{background:var(--deep);border-color:var(--deep);color:#fff}
+.qjump a,.hscroll-btn,.jc-more-btn{box-shadow:none!important}
+
+/* Right-hand Frosted Glass Doctor Dock + Bottom Guide CTA */
+.hero-dock{padding:22px;border-radius:22px;background:rgba(36,19,29,.48);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);color:#fff;box-shadow:0 28px 60px -28px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.18);display:grid;gap:14px}
+.hd-doc{display:flex;align-items:center;gap:12px;padding-bottom:13px;border-bottom:1px solid rgba(255,255,255,.14)}
+.hd-av{position:relative;width:52px;height:52px;flex:none}
+.hd-av img{width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:50% 15%;border:2px solid rgba(233,185,198,.65)}
+.hd-av i{position:absolute;right:1px;bottom:1px;width:12px;height:12px;border-radius:50%;background:#22c55e;border:2px solid var(--night)}
+.hd-doc strong{display:block;font-family:'Fraunces',Georgia,serif;font-size:1.05rem;font-weight:600;color:#fff;line-height:1.2}
+.hd-doc span{display:block;font-size:.76rem;color:#DFC8D3;margin-top:2px}
+.hd-lbl{font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-l);margin:0}
+.hd-chips{display:grid;gap:8px}
+.hd-chip{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);color:#F7EBF0;font:600 .84rem 'Plus Jakarta Sans',sans-serif;cursor:pointer;text-align:left;transition:background .18s,border-color .18s,transform .18s}
+.hd-chip:hover{background:rgba(233,185,198,.2);border-color:var(--accent-l);transform:translateX(3px)}
+.hd-chip em{font-style:normal;color:var(--accent-l);font-weight:800}
+.hd-guide-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 16px;border-radius:999px;background:rgba(248,211,222,.92);color:var(--night)!important;text-decoration:none;font:800 .86rem 'Plus Jakarta Sans',sans-serif;border:1px solid rgba(255,255,255,.55);transition:transform .18s,background .18s}
+.hd-guide-btn:hover{transform:translateY(-1px);background:#fff}
+
+/* TRUE TRANSLUCENT FROSTED-GLASS POP-UPS */
+.pop{background:rgba(255,255,255,.62)!important;backdrop-filter:blur(26px) saturate(185%)!important;-webkit-backdrop-filter:blur(26px) saturate(185%)!important;border:1px solid rgba(255,255,255,.72)!important;box-shadow:0 22px 52px -16px rgba(36,19,29,.36),inset 0 1px 1px rgba(255,255,255,.9)!important}
+.pop-mini{background:rgba(140,59,82,.72)!important;backdrop-filter:blur(22px) saturate(180%)!important;-webkit-backdrop-filter:blur(22px) saturate(180%)!important;border:1px solid rgba(255,255,255,.38)!important;box-shadow:0 16px 36px -12px rgba(36,19,29,.45),inset 0 1px 0 rgba(255,255,255,.4)!important}
+.so-vbar,.vbar{background:rgba(36,19,29,.62)!important;backdrop-filter:blur(26px) saturate(185%)!important;-webkit-backdrop-filter:blur(26px) saturate(185%)!important;border:1px solid rgba(255,255,255,.24)!important;box-shadow:0 20px 44px -12px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.2)!important}
+.so-nudge-pill,.nudge{background:rgba(140,59,82,.76)!important;backdrop-filter:blur(22px) saturate(180%)!important;-webkit-backdrop-filter:blur(22px) saturate(180%)!important;border:1px solid rgba(255,255,255,.38)!important;box-shadow:0 16px 34px -10px rgba(36,19,29,.55),inset 0 1px 0 rgba(255,255,255,.4)!important}
+.info-modal-card{background:rgba(251,248,246,.84)!important;backdrop-filter:blur(26px) saturate(170%)!important;-webkit-backdrop-filter:blur(26px) saturate(170%)!important;border:1px solid rgba(255,255,255,.78)!important}
+
+@media(prefers-reduced-motion:reduce){.btn-checkin-luxe,.btn-checkin-luxe::before,.btn-checkin-luxe .live-beacon::after,.btn-checkin-luxe .pill-go span{animation:none!important}}
