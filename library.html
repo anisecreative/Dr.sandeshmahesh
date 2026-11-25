@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Women's Health Library | Dr. Sandesh Mahesh</title>
+<meta name="description" content="Obstetrics, gynecology, reproductive medicine, and minimally invasive care education by Dr. Sandesh Mahesh (MBBS, MS, FRM, FMAS).">
+<link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pages.css"></head>
+<body>
+<header class="nav"><div class="wrap"><a class="brand" href="index.html">Dr. Sandesh Mahesh<span class="anise-dot">.</span></a><a class="btn" data-booking href="index.html#consult">Book Video Call</a></div></header>
+<main><section><div class="wrap"><p class="eyebrow">Women's Health Library</p><h1>Learn</h1>
+<input class="search" id="q" type="search" placeholder="Search OBGYN & fertility guides" aria-label="Search articles"><div class="chips" id="cats"></div><div class="items" id="list"></div><p id="empty" class="note"></p></div></section></main>
+<footer><div class="wrap"><p>Educational content is for general awareness and does not replace an individual medical consultation.</p><p><a href="index.html">Home</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="js/site-config.js"></script><script src="js/supabase-config.js"></script><script src="js/analytics.js"></script><script src="js/ui.js"></script><script src="js/content-db.js"></script><script src="js/main.js"></script>
+<script>(async function(){var all=await ContentDB.articles(),cat='',q=document.getElementById('q'),L=document.getElementById('list'),E=document.getElementById('empty'),C=document.getElementById('cats');
+if(!all.length){E.textContent='Guides will appear here once approved and published by Dr. Sandesh Mahesh.';q.hidden=true;return;}
+var cats=Array.from(new Set(all.map(function(a){return a.category;}).filter(Boolean)));
+function draw(){C.textContent='';['All'].concat(cats).forEach(function(c){var b=el('button',{class:'chip'+((c==='All'&&!cat)||c===cat?' on':''),type:'button',text:c});b.onclick=function(){cat=c==='All'?'':c;draw();};C.appendChild(b);});
+var t=q.value.toLowerCase();var r=all.filter(function(a){return(!cat||a.category===cat)&&(a.title+' '+a.summary).toLowerCase().indexOf(t)>-1;});L.textContent='';r.forEach(function(a){L.appendChild(articleCard(a));});E.textContent=r.length?'':'No matching guides.';}
+q.addEventListener('input',draw);draw();})();</script></body></html>

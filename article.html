@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Article | Dr. Sandesh Mahesh</title><link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pages.css"></head>
+<body>
+<header class="nav"><div class="wrap"><a class="brand" href="index.html">Dr. Sandesh Mahesh<span class="anise-dot">.</span></a><a class="btn" data-booking href="index.html#consult">Book Video Call</a></div></header>
+<main><section><div class="wrap read" id="out"><p class="note">Loading...</p></div></section></main>
+<footer><div class="wrap"><p>Educational content is for general awareness and does not replace an individual medical consultation.</p><p><a href="index.html">Home</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="js/site-config.js"></script><script src="js/supabase-config.js"></script><script src="js/analytics.js"></script><script src="js/ui.js"></script><script src="js/content-db.js"></script><script src="js/main.js"></script>
+<script>(async function(){var o=document.getElementById('out'),a=await ContentDB.article(slugParam());o.textContent='';
+if(!a){o.appendChild(el('h1',{text:'Guide not found'}));o.appendChild(el('p',{},[el('a',{href:'library.html',text:'Back to the Women\u2019s Health Library'})]));return;}
+document.title=a.title+' | '+SITE_CONFIG.doctorName;o.appendChild(el('p',{class:'eyebrow',text:(a.category||'Women\u2019s Health')+' \u00b7 '+readMins(a.body)+' min read'}));o.appendChild(el('h1',{text:a.title}));
+if(a.summary)o.appendChild(el('p',{class:'note',text:a.summary}));paras(a.body).forEach(function(p){o.appendChild(p);});
+var r=reelCard(a.related_reel_url,a.featured_image,'Watch the related Reel');if(r)o.appendChild(r);
+if(a.related_video){var w=el('div',{class:'items',style:'grid-template-columns:1fr;max-width:420px;margin:22px 0'});w.appendChild(videoCard({video_id:a.related_video,title:'Watch the related YouTube video'}));o.appendChild(w);}
+o.appendChild(ctaRow());if(window.applyLinks)window.applyLinks();})();</script></body></html>

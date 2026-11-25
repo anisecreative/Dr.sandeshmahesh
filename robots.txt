@@ -1,0 +1,7 @@
+# Pre-launch: keep search engines out until Dr. Sandesh Mahesh approves all content.
+# At launch, replace with:
+#   User-agent: *
+#   Allow: /
+#   Disallow: /admin/
+User-agent: *
+Disallow: /
