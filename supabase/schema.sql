@@ -1,0 +1,2 @@
+-- Do NOT run a destructive reset.
+-- See supabase/migrations/001_dr_sandesh_mahesh_setup.sql for safe additive tenant setup.
