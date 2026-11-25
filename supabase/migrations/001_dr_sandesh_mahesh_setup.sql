@@ -1,0 +1,15 @@
+-- 001_dr_sandesh_mahesh_setup.sql
+-- Safe, additive setup template for Dr. Sandesh Mahesh.
+-- IMPORTANT: First check whether a row for Dr. Sandesh already exists in public.doctors:
+--   select id, slug, display_name, is_active from public.doctors where slug ilike '%sandesh%' or display_name ilike '%sandesh%';
+--
+-- If a row ALREADY exists (for example, UUID 2222...), DO NOT create a duplicate tenant:
+-- simply copy that verified UUID and slug into js/supabase-config.js!
+--
+-- If no row exists yet, generate a new UUID and insert his tenant row:
+-- insert into public.doctors (id, slug, display_name, short_name, is_active, assistant_enabled)
+-- values (gen_random_uuid(), 'sandesh-mahesh', 'Dr. Sandesh Mahesh', 'Dr. Sandesh', true, false);
+--
+-- Then grant admin access ONLY to Dr. Sandesh's dedicated auth user (never reuse another doctor's admin account):
+-- insert into public.doctor_admins (doctor_id, user_id)
+-- select '<DR_SANDESH_UUID>', id from auth.users where email = 'DR_SANDESH_ADMIN_EMAIL';
