@@ -1,0 +1,27 @@
+/* Shared admin styling for Dr. Sandesh Mahesh */
+body{background:#f5f0f2;font-size:15px;line-height:1.55}
+h1{font-size:clamp(1.4rem,5vw,1.9rem)}h2{font-size:1.15rem}h3{font-size:1rem}.note{font-size:.82rem}
+.btn{padding:10px 18px;min-height:42px;font-size:.88rem}
+input,select,textarea{padding:9px 12px;min-height:42px;font-size:16px}label{font-size:.82rem}
+section{padding:36px 0}.wrap{padding:0 16px}
+.adm-top{position:sticky;top:0;z-index:50;background:var(--night);color:#fff;display:flex;align-items:center;gap:10px;padding:8px 14px;flex-wrap:nowrap}
+.adm-top a,.adm-top button{color:#fff;text-decoration:none;font:700 .8rem 'Plus Jakarta Sans',sans-serif;white-space:nowrap}
+.adm-top .sp{flex:1;min-width:0}.adm-top .em{font-size:.74rem;color:#c7aebc;min-width:0;max-width:46vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:520px){.adm-top .em{display:none}}
+.adm-head{margin-bottom:18px}.adm-head p{color:var(--mute);margin:0;font-size:.9rem}
+.grp{margin-bottom:24px}.grp h2{display:flex;align-items:center;gap:10px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:10px}.grp h2::before{content:'';width:4px;height:14px;border-radius:4px;background:currentColor}
+.tiles{display:grid;gap:10px}@media(min-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{display:flex;gap:12px;align-items:center;padding:14px;background:#fff;border:1px solid var(--line);border-radius:16px;text-decoration:none;color:var(--ink);transition:transform .2s,box-shadow .2s}.tile:hover{transform:translateY(-2px);box-shadow:0 16px 30px -22px rgba(36,19,29,.45)}
+.tile .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex:none}.tile .ic svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tile b{display:block;font-size:.96rem}.tile small{display:block;color:var(--mute);font-size:.8rem;line-height:1.35}.tile .tx{flex:1;min-width:0}
+.tile .bdg{min-width:26px;height:26px;padding:0 9px;border-radius:999px;background:#8C3B52;color:#fff;font-weight:800;font-size:.74rem;display:none;place-items:center;white-space:nowrap}.tile .bdg.on{display:grid}
+.g1 h2{color:#8C3B52}.g1 .ic{background:#f9eff2;color:#8C3B52}.g2 h2{color:#5e3a6e}.g2 .ic{background:#f2eaf7;color:#5e3a6e}.g3 h2{color:#2f6b5e}.g3 .ic{background:#e5f3ef;color:#2f6b5e}.g4 h2{color:#8a6a1f}.g4 .ic{background:#f6ecd2;color:#8a6a1f}
+.tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:4px 0 10px;padding-bottom:4px}.tabs button{flex:none;display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:700 .82rem 'Plus Jakarta Sans',sans-serif;cursor:pointer;color:var(--ink);white-space:nowrap}.tabs button em{font-style:normal;background:var(--stone);border-radius:999px;padding:0 8px;font-size:.74rem}.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.sub{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}.sub button{padding:6px 13px;border-radius:999px;border:1px solid var(--line);background:#fff;font:700 .76rem 'Plus Jakarta Sans',sans-serif;cursor:pointer}.sub button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lead{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;border-left-width:5px;overflow:hidden;min-width:0}
+.lead.t-ci{border-left-color:#8C3B52}.lead.t-wa{border-left-color:#1f9d55}.lead.t-cb{border-left-color:#5e3a6e}
+.lead .top{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}.lead .av{width:40px;height:40px;border-radius:50%;background:var(--stone);display:grid;place-items:center;font-weight:800;flex:none}
+.lead .nm{font-weight:800;font-size:1.02rem;display:flex;align-items:center;flex-wrap:wrap;gap:6px}.lead .when{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.76rem;color:var(--mute);margin-top:6px}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.66rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}.t-ci .badge{background:#f9eff2;color:#8C3B52}.t-wa .badge{background:#dcf5e5;color:#17773f}.t-cb .badge{background:#f2eaf7;color:#5e3a6e}
+.lead .phone{font-size:1.1rem;font-weight:800;margin:0 0 10px}.lead .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.lead .acts a{display:flex;align-items:center;justify-content:center;padding:11px;border-radius:12px;font-weight:800;text-decoration:none;min-height:44px;font-size:.9rem}.lead .acts .call{background:var(--ink);color:#fff}.lead .acts .wa{background:#25D366;color:#06260f}
+.lead .frm{display:grid;grid-template-columns:1fr 1fr;gap:10px}.lead .frm .full{grid-column:1/-1}.lead .save{width:100%;margin-top:12px}

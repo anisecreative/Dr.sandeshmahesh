@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Leads & Enquiries | Dr. Sandesh Mahesh</title><link rel="stylesheet" href="../css/main.css"></head>
+<body><section style="padding-top:24px"><div class="wrap">
+<div class="adm-head"><h1>Leads &amp; Enquiries</h1><p>OBGYN consultation check-in leads and WhatsApp requests scoped strictly to Dr. Sandesh Mahesh.</p></div>
+<div class="tabs" id="tabs"></div><div class="sub" id="sub"></div><p id="msg" class="note" role="status"></p><div id="list"></div></div></section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script><script src="../js/supabase-config.js"></script><script src="../js/ui.js"></script><script src="../js/admin-auth.js"></script>
+<script>(async function(){var sb=await adminReady;if(!sb)return;var did=SUPABASE_CONFIG.doctorId,msg=document.getElementById('msg'),list=document.getElementById('list'),tabsEl=document.getElementById('tabs'),subEl=document.getElementById('sub'),data=[],tab='all',st='all';
+var TY={checkin:['Check-in leads','OBGYN Check-in','t-ci'],wa:['WhatsApp enquiries','WhatsApp enquiry','t-wa'],cb:['Other requests','Callback request','t-cb']};
+function ty(x){return x.source==='checkin'?'checkin':(x.enquiry_category==='Consultation enquiry'?'wa':'cb');}
+var BD={lower:'First-step clarity',moderate:'Report & clarity review',higher:'Priority specialist review'};
+function chips(box,items,cur,fn){box.textContent='';items.forEach(function(i){var b=el('button',{type:'button'},[i[1]].concat(i[2]===undefined?[]:[el('em',{text:String(i[2])})]));if(i[0]===cur)b.className='on';b.onclick=function(){fn(i[0]);};box.appendChild(b);});}
+function draw(){var inTab=data.filter(function(x){return tab==='all'||ty(x)===tab;});
+chips(tabsEl,[['all','All leads',data.length],['checkin','OBGYN Check-in',data.filter(function(x){return ty(x)==='checkin';}).length],['wa','WhatsApp enquiries',data.filter(function(x){return ty(x)==='wa';}).length]],tab,function(v){tab=v;draw();});
+chips(subEl,[['all','Any status'],['new','New'],['contacted','Contacted'],['resolved','Resolved'],['archived','Archived']],st,function(v){st=v;draw();});
+var rows=inTab.filter(function(x){return st==='all'||x.status===st;});list.textContent='';msg.textContent=rows.length?'':'No leads found.';
+rows.forEach(function(x){var T=TY[ty(x)],digits=x.phone.replace(/[^0-9]/g,''),sel=el('select'),fu=el('input',{type:'date',value:x.follow_up_date||''}),n=el('input',{placeholder:'Private team note',value:x.internal_note||'',maxlength:'1000'});
+['new','contacted','resolved','archived'].forEach(function(v){var o=el('option',{value:v,text:v.charAt(0).toUpperCase()+v.slice(1)});if(v===x.status)o.selected=true;sel.appendChild(o);});
+var sv=el('button',{class:'btn save',type:'button',text:'Save changes'});sv.onclick=async function(){var u=await sb.from('callback_requests').update({status:sel.value,internal_note:n.value,follow_up_date:fu.value||null}).eq('id',x.id).eq('doctor_id',did);msg.textContent=u.error?'Save failed.':'Saved.';if(!u.error){x.status=sel.value;x.internal_note=n.value;x.follow_up_date=fu.value||null;}};
+var badges=[el('span',{class:'badge',text:T[1]})];if(x.checkin_band&&BD[x.checkin_band])badges.push(el('span',{class:'badge',text:BD[x.checkin_band]}));
+var kids=[el('div',{class:'top'},[el('div',{class:'av',text:(x.name||'?').trim().charAt(0).toUpperCase()}),el('div',{},[el('div',{class:'nm',text:x.name}),el('div',{class:'when'},badges)])]),el('div',{class:'phone',text:x.phone}),
+el('div',{class:'acts'},[el('a',{class:'call',href:'tel:'+x.phone.replace(/[^0-9+]/g,''),text:'Call'}),el('a',{class:'wa',href:'https://wa.me/'+(digits.length===10?'91'+digits:digits),target:'_blank',rel:'noopener',text:'WhatsApp'})])];
+if(x.checkin_answers){var a=x.checkin_answers;var d=el('details',{},[el('summary',{text:'Check-in selections'}),el('p',{text:['Concern: '+(a.concern||'-'),'Duration: '+(a.duration||'-'),'Reports: '+(a.reports||'-'),'Prior consult: '+(a.prior_consult||'-'),'Call preference: '+(a.call_preference||'-'),'Goal: '+(a.main_goal||'-')].join(' | ')})]);kids.push(d);}
+kids.push(el('div',{class:'frm',style:'margin-top:12px'},[el('label',{text:'Status'},[sel]),el('label',{text:'Follow up on'},[fu]),el('label',{class:'full',text:'Note'},[n])]),sv);
+list.appendChild(el('div',{class:'lead '+T[2]+' status-'+x.status},kids));});}
+var r=await sb.from('callback_requests').select('*').eq('doctor_id',did).order('created_at',{ascending:false});
+if(r.error){msg.textContent='Could not load leads.';return;}data=r.data;draw();})();</script></body></html>

@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Admin Login | Dr. Sandesh Mahesh</title><link rel="stylesheet" href="../css/main.css"></head>
+<body><section><div class="wrap"><h1>Dr. Sandesh Mahesh &mdash; Admin Login</h1>
+<form id="login"><label>Email<input name="email" type="email" required autocomplete="username"></label><label>Password<input name="password" type="password" required autocomplete="current-password"></label><button class="btn">Sign in</button><p id="msg" class="note" role="status"></p></form></div></section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script><script src="../js/supabase-config.js"></script>
+<script>document.getElementById('login').addEventListener('submit',async function(e){e.preventDefault();var sb=getSupabase(),m=document.getElementById('msg');if(!sb){m.textContent='Supabase is not configured in js/supabase-config.js yet.';return;}
+var d=new FormData(e.target);var r=await sb.auth.signInWithPassword({email:d.get('email'),password:d.get('password')});if(r.error){m.textContent='Sign in failed.';return;}location.href='index.html';});</script></body></html>

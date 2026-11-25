@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>YouTube Videos | Dr. Sandesh Mahesh</title><link rel="stylesheet" href="../css/main.css"></head>
+<body><section><div class="wrap"><h1>YouTube Videos (@Namma_DrSandesh)</h1><p class="note">Paste YouTube Shorts or video links to display on the homepage.</p>
+<form id="add"><textarea id="links" rows="4" placeholder="https://www.youtube.com/shorts/..."></textarea><button class="btn" type="submit">Add videos</button></form>
+<p id="msg" class="note"></p><div id="list"></div></div></section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script><script src="../js/supabase-config.js"></script><script src="../js/ui.js"></script><script src="../js/admin-auth.js"></script>
+<script>(async function(){var sb=await adminReady;if(!sb)return;var did=SUPABASE_CONFIG.doctorId,msg=document.getElementById('msg'),L=document.getElementById('list');
+function parse(u){var m=String(u||'').trim().match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:shorts\/|embed\/|live\/|watch\?(?:[^#\s]*&)?v=))([A-Za-z0-9_-]{11})/);return m?{id:m[1],short:/\/shorts\//.test(u)}:null;}
+async function load(){var r=await sb.from('youtube_videos').select('*').eq('doctor_id',did).order('sort_order');L.textContent='';(r.data||[]).forEach(function(x){L.appendChild(el('div',{class:'card',style:'margin-top:10px'},[el('strong',{text:x.title||x.video_id})]));});}
+document.getElementById('add').onsubmit=async function(e){e.preventDefault();var lines=document.getElementById('links').value.split(/\n+/).filter(Boolean),ok=0;for(var i=0;i<lines.length;i++){var p=parse(lines[i]);if(!p)continue;var r=await sb.from('youtube_videos').insert({doctor_id:did,video_id:p.id,title:'',is_short:p.short,visible:true,featured:true,sort_order:i+1});if(!r.error)ok++;}msg.textContent=ok+' video(s) added.';load();};
+load();})();</script></body></html>

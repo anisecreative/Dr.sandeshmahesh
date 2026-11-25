@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Manage Content | Dr. Sandesh Mahesh</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/pages.css"></head>
+<body><section><div class="wrap"><h1 id="h">Manage Content</h1><p id="msg" class="note" role="status"></p><p><button class="btn" id="new" type="button">+ New</button></p><form id="f" hidden></form><div id="list" class="grid"></div></div></section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script><script src="../js/supabase-config.js"></script><script src="../js/ui.js"></script><script src="../js/admin-auth.js"></script>
+<script>
+var ST=['draft','published','archived'];
+var T={
+content:{n:'Women\u2019s Health Library Articles',t:'educational_content',key:'title',f:[['title','text'],['slug','text'],['category','text'],['summary','area'],['body','area'],['related_reel_url','text'],['doctor_approved','check','Approved by Dr. Sandesh Mahesh'],['status','sel',ST]],pub:1},
+campaigns:{n:'Reel Campaign Landing Pages',t:'reel_campaigns',key:'title',f:[['title','text'],['slug','text'],['topic','text'],['associated_reel_url','text'],['landing_page_content','area'],['doctor_approved','check','Approved by Dr. Sandesh Mahesh'],['status','sel',ST]],pub:1},
+settings:{n:'Site Settings',t:'site_settings',key:'key',f:[['key','text'],['value','text']],pk:['doctor_id','key']}};
+(async function(){var sb=await adminReady;if(!sb)return;var c=T[new URLSearchParams(location.search).get('t')]||T.content,did=SUPABASE_CONFIG.doctorId,msg=document.getElementById('msg'),F=document.getElementById('f'),L=document.getElementById('list'),cur=null;
+document.getElementById('h').textContent=c.n;
+function form(row){cur=row;F.textContent='';F.hidden=false;var v=row||{};c.f.forEach(function(d){var x=v[d[0]],i;if(d[1]==='area'){i=el('textarea',{name:d[0],rows:'6'});i.value=x||'';}else if(d[1]==='check'){i=el('input',{type:'checkbox',name:d[0]});i.checked=!!x;F.appendChild(el('label',{class:'check'},[i,d[2]]));return;}else if(d[1]==='sel'){i=el('select',{name:d[0]});d[2].forEach(function(o){var op=el('option',{value:o,text:o});if(o===(x||d[2][0]))op.selected=true;i.appendChild(op);});}else{i=el('input',{name:d[0],type:'text'});i.value=x||'';}F.appendChild(el('label',{text:d[0].replace(/_/g,' ')},[i]));});F.appendChild(el('button',{class:'btn',type:'submit',text:'Save'}));}
+F.onsubmit=async function(e){e.preventDefault();var o={};c.f.forEach(function(d){var i=F.elements[d[0]];o[d[0]]=d[1]==='check'?i.checked:i.value;});if(c.pub&&o.status==='published'&&!o.doctor_approved){msg.textContent='Tick doctor approval before publishing.';return;}
+var r=c.pk?await sb.from(c.t).upsert(Object.assign({doctor_id:did},o),{onConflict:'doctor_id,key'}):cur?await sb.from(c.t).update(o).eq('id',cur.id).eq('doctor_id',did):await sb.from(c.t).insert(Object.assign({doctor_id:did},o));
+msg.textContent=r.error?'Save failed: '+r.error.message:'Saved.';if(!r.error){F.hidden=true;load();}};
+document.getElementById('new').onclick=function(){form(null);};
+async function load(){var r=await sb.from(c.t).select('*').eq('doctor_id',did);if(r.error){msg.textContent='Could not load.';return;}L.textContent='';r.data.forEach(function(x){var b=el('button',{class:'btn alt',type:'button',text:'Edit'});b.onclick=function(){form(x);};L.appendChild(el('div',{class:'card'},[el('h3',{text:x[c.key]||'(untitled)'}),el('p',{class:'note',text:x.status||''}),b]));});}
+load();})();</script></body></html>
