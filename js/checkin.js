@@ -2,9 +2,10 @@
    Built around Dr. Sandesh's 5 life stages (planning, trimester1, pregnancy, after_birth, periods_other):
    1) What brings you here today?
    2) Quick safety check (plain-English warning signs shown BEFORE asking details)
-   3) Optional name + phone (or continue without sharing)
+   3) Optional name + phone with explicit consent (or continue without sharing). Saved to Supabase via RPC.
    4) Everyday stage-specific questions (e.g. "Which month are you in?", "What have you been noticing?", "When did you last see a doctor?")
-   5) Calm, reassuring summary with a suggested check-in rhythm + WhatsApp (7406886226) / booking CTA. */
+   5) Calm, reassuring summary with a suggested check-in rhythm + WhatsApp (7406886226) / booking CTA.
+   Backend: window.startCheckin / window.completeCheckin (js/callback-db.js) and window.trackEvent (js/analytics.js). */
 (function () {
   var root = document.getElementById("checkin-app");
   if (!root) return;
@@ -148,10 +149,11 @@
   };
 
   function fresh() {
-    return { step: 1, stage: "", danger: [], noDanger: false, name: "", phone: "", skipped: false, qi: 0, ans: {}, note: "", err: "" };
+    return { step: 1, stage: "", danger: [], noDanger: false, name: "", phone: "", skipped: false, qi: 0, ans: {}, note: "", err: "", consent: false, leadId: "", done: false };
   }
   var st = fresh();
 
+  function track(ev) { try { if (window.trackEvent) window.trackEvent(ev); } catch (e) {} }
   function clear() { root.textContent = ""; }
   function stageObj() { return STAGES.find(function (s) { return s.key === st.stage; }) || STAGES[0]; }
   function dangerFor() { return DANGER.filter(function (d) { return d.stages.indexOf(st.stage) > -1; }); }
@@ -197,7 +199,7 @@
         });
         g.appendChild(el("label", { class: "opt" }, [inp, el("span", {}, [el("div", {}, [el("div", { text: s.label }), el("small", { class: "note", style: "display:block;font-weight:500", text: s.hint })])])]));
       });
-      next.onclick = function () { st.step = 2; render(); };
+      next.onclick = function () { track("checkin_start"); st.step = 2; render(); };
       root.appendChild(g);
       root.appendChild(el("div", { class: "ci-nav" }, [el("span"), next]));
       return;
@@ -254,7 +256,7 @@
       return;
     }
 
-    /* STEP 3: Optional Name + Phone */
+    /* STEP 3: Optional Name + Phone (explicit consent; saved to Supabase) */
     if (st.step === 3) {
       topBar("Almost there", 48);
       root.appendChild(el("h3", { text: "Where should we send your summary & tips?" }));
@@ -262,20 +264,28 @@
       var f = el("form", { novalidate: "" });
       var nm = el("input", { placeholder: "Your name", value: st.name, maxlength: "60" });
       var ph = el("input", { type: "tel", inputmode: "numeric", placeholder: "10-digit mobile number", value: st.phone, maxlength: "12" });
+      var cb = el("input", { type: "checkbox" });
+      cb.checked = st.consent;
       var msg = el("p", { class: "note", role: "status", text: st.err });
       var go = el("button", { class: "btn", type: "submit", text: "Continue \u2192" });
       var skip = el("button", { class: "ci-skip", type: "button", text: "Continue without sharing" });
-      skip.onclick = function () { st.skipped = true; st.err = ""; st.step = 4; render(); };
+      skip.onclick = function () { st.skipped = true; st.err = ""; track("checkin_skip_details"); st.step = 4; render(); };
       f.appendChild(el("label", { text: "Name" }, [nm]));
       f.appendChild(el("label", { text: "Phone number" }, [ph]));
+      f.appendChild(el("label", { class: "opt" }, [cb, el("span", { text: "I agree that Dr. Sandesh's team may contact me on WhatsApp about this check-in. I understand it is general guidance, not a diagnosis." })]));
       f.appendChild(go);
       if (st.err) f.appendChild(msg);
       f.appendChild(skip);
-      f.addEventListener("submit", function (e) {
+      f.addEventListener("submit", async function (e) {
         e.preventDefault();
         var n = nm.value.trim(), p = ph.value.replace(/\D/g, "").slice(-10);
+        st.name = n; st.phone = p; st.consent = cb.checked;
         if (n.length < 2 || p.length !== 10) { st.err = "Please enter your name and a 10-digit mobile number, or continue without sharing."; render(); return; }
-        st.name = n; st.phone = p; st.err = ""; st.step = 4; render();
+        if (!cb.checked) { st.err = "Please tick the box to let the team contact you, or continue without sharing."; render(); return; }
+        go.disabled = true; go.textContent = "Saving\u2026";
+        var r = window.startCheckin ? await window.startCheckin({ name: n, phone: p, consent: true }) : { ok: false, msg: "Lead saving is not enabled yet. You can continue without sharing." };
+        if (!r.ok) { st.err = r.msg || "Could not save. Please try again, or continue without sharing."; render(); return; }
+        st.leadId = r.id || ""; st.err = ""; st.step = 4; render();
       });
       root.appendChild(f);
       var back = el("button", { class: "btn alt", type: "button", text: "\u2190 Back", style: "margin-top:10px" });
@@ -334,6 +344,13 @@
 
     /* STEP 5: Reassuring Summary (Dr. Sandesh's exact calm tone) */
     var level = evaluate();
+    if (!st.done) {
+      st.done = true;
+      track("checkin_complete");
+      if (st.leadId && window.completeCheckin) {
+        window.completeCheckin(st.leadId, level === "talk_soon" ? "moderate" : "lower", { stage: st.stage, a: st.ans });
+      }
+    }
     var visit = st.ans.lastvisit;
     var overdue = visit === "visit_older" || visit === "visit_none";
     topBar(st.name ? "Thank you, " + st.name : "Your gentle summary", 100);
