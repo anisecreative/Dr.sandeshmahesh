@@ -18,10 +18,6 @@
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<div class="demo-ribbon" role="note">
-  <strong>Doctor Review Preview:</strong> Educational stories &amp; interactive tools unlocked for viewing &middot; Pending sign-off by Dr. Sandesh Mahesh
-</div>
-
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="#top">Dr. Sandesh Mahesh<span class="anise-dot">.</span></a>
@@ -164,7 +160,7 @@
         </div>
       </div>
       <div class="stories-track" id="demoStoriesGrid"></div>
-      <div class="journey-cta-row" style="margin-top:16px"><p class="note" style="color:#c7aebc;margin:0">Illustrative educational conversations (Demo Preview &middot; Pending Doctor Approval).</p><a class="btn warm" id="exploreAllStories" href="stories.html">Explore all conversations &rarr;</a></div>
+      <div class="journey-cta-row" style="margin-top:16px"><span></span><a class="btn warm" id="exploreAllStories" href="stories.html">Explore all conversations &rarr;</a></div>
     </div>
   </section>
 
@@ -481,11 +477,14 @@
 <script src="js/analytics.js"></script>
 <script src="js/callback-db.js"></script>
 <script src="js/ui.js"></script>
-<script src="js/stories-data.js"></script>
 <script src="js/content-db.js"></script>
 <script src="js/main.js"></script>
 <script src="js/wa-form.js"></script>
 <script src="js/checkin.js"></script>
-<script src="js/obg-modules.js"></script>
+<script>
+(function(){var done=false;function go(){if(done)return;done=true;var s=document.createElement('script');s.src='js/obg-modules.js';document.body.appendChild(s);}
+setTimeout(go,3000);
+(async function(){try{var rows=await ContentDB.insights();window.SANDESH_STORIES=rows.map(function(r){var a=function(v){return Array.isArray(v)?v:[];};return{slug:r.slug,title:r.title,topic:r.topic,dialogue:a(r.dialogue),relateIntro:r.relate_intro,relatePoints:a(r.relate_points),relateClose:r.relate_close,actionPoints:a(r.action_points),urgent:r.urgent};});}catch(e){window.SANDESH_STORIES=[];}go();})();})();
+</script>
 </body>
 </html>
