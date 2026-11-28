@@ -146,9 +146,13 @@
   }
 
   /* ---------- 4. EXACT DR. VIKAS VIRTUAL CONVERSATIONS OVERLAY (1:1 LOGIC & UI) ---------- */
+  /* Conversations come ONLY from published rows in public.patient_insights (see loader in index.html).
+     With none published, the whole section is hidden. */
   var storiesRoot = document.getElementById("demoStoriesGrid");
   var overlay = document.getElementById("storyOverlay");
-  var STORIES = window.SANDESH_DEMO_STORIES || [];
+  var STORIES = window.SANDESH_STORIES || [];
+  var storiesSection = document.getElementById("stories");
+  if (storiesSection && !STORIES.length) storiesSection.hidden = true;
   var cleanupLock = null;
 
   function closeStoryOverlay() {
@@ -209,7 +213,7 @@
           '<ol class="so-action-list">' + (s.actionPoints || []).map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + '</ol>' +
         '</div>' +
         (s.urgent ? '<div class="so-urgent-rich"><h3>&#9888; When to seek urgent care</h3><p>' + esc(s.urgent) + '</p></div>' : "") +
-        '<p class="note">This is a fictional, educational conversation (Demo Preview &middot; Pending Doctor Approval). It is not a real patient story or testimonial, and does not replace an individual medical consultation.</p>' +
+        '<p class="note">This is a fictional, educational conversation. It is not a real patient story or testimonial, and does not replace an individual medical consultation.</p>' +
         '<div class="so-bridge"><p>If this sounds familiar, you can talk to Dr. Sandesh over a video consultation, from home.</p><a class="btn" href="#consult" id="soBookBtn">Book a Video Consultation</a></div>' +
         '<span class="eyebrow">More conversations</span><h2 style="margin-bottom:6px">Other conversations</h2>' +
         '<div class="so-others">' + othersHtml + '</div>' +
@@ -390,7 +394,6 @@
       card.className = "conv-card shade-" + (idx % 3);
       card.innerHTML =
         '<span class="cc-top"><span class="cc-n">0' + (idx + 1) + '</span><span class="cc-topic">' + esc(s.topic) + '</span></span>' +
-        '<span class="demo-chip">Demo Preview &middot; Pending Approval</span>' +
         '<h3>&ldquo;' + esc(s.title) + '&rdquo;</h3>' +
         '<div class="cc-chat">' +
           (first.q ? '<span class="cc-b d">' + esc(first.q) + '</span>' : "") +
