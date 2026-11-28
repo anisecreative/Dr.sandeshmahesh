@@ -5,24 +5,23 @@
 <link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/obg-modules.css">
 </head>
 <body>
-<div class="demo-ribbon" role="note"><strong>Doctor Review Preview:</strong> Illustrative educational conversations unlocked for preview &middot; Pending final sign-off by Dr. Sandesh Mahesh</div>
 <header class="nav"><div class="wrap"><a class="brand" href="index.html">Dr. Sandesh Mahesh</a><a class="btn" href="index.html#consult">Book Video Call (&#8377;500)</a></div></header>
 <main><section><div class="wrap read">
 <p class="eyebrow">Patient Insights &middot; Virtual Conversations</p>
 <h1>Sometimes, someone else's story sounds familiar.</h1>
 <p class="note">Fictional, educational conversations showing how common women's health concerns are discussed with Dr. Sandesh Mahesh. Not real patient testimonials.</p>
+<p id="empty" class="note" hidden>New conversations will appear here soon.</p>
 <div id="list" style="display:grid;gap:22px;margin-top:22px"></div>
 </div></section></main>
 <footer><div class="wrap"><p>Educational content is for general awareness and does not replace an individual medical consultation.</p><p><a href="index.html">Home</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="js/site-config.js"></script><script src="js/supabase-config.js"></script><script src="js/ui.js"></script><script src="js/stories-data.js"></script><script src="js/content-db.js"></script><script src="js/main.js"></script>
+<script src="js/site-config.js"></script><script src="js/supabase-config.js"></script><script src="js/ui.js"></script><script src="js/content-db.js"></script><script src="js/main.js"></script>
 <script>(async function(){
-var db = await ContentDB.insights();
-var all = (db && db.length) ? db : (window.SANDESH_DEMO_STORIES || []);
+var all = await ContentDB.insights();
 var L = document.getElementById('list');
+if (!all.length) { document.getElementById('empty').hidden = false; return; }
 all.forEach(function(s){
   var box = el('article',{class:'card'});
-  if (s.isDemo) box.appendChild(el('span',{class:'demo-badge',text:'Demo Preview \u00b7 Pending Doctor Approval'}));
   box.appendChild(el('p',{class:'eyebrow',style:'margin-top:10px',text:s.topic||'OBGYN'}));
   box.appendChild(el('h2',{text:'\u201c'+s.title+'\u201d'}));
   if (s.intro) box.appendChild(el('p',{class:'lead',text:s.intro}));

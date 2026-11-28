@@ -1,5 +1,79 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Virtual Conversations | Dr. Sandesh Mahesh</title><link rel="stylesheet" href="../css/main.css"></head>
-<body><section><div class="wrap"><h1>Virtual Conversations</h1><p class="todo">Fictional educational OBGYN conversations only. Never publish real patient stories or unapproved clinical text.</p><p id="msg" class="note"></p><div id="list" class="grid"></div></div></section>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Virtual Conversations | Dr. Sandesh Mahesh</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/pages.css">
+<style>
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.75rem;font-weight:800;background:#e9e4e6;color:#3b2f35;margin-right:6px}
+.badge.pub{background:#d9f2e3;color:#14532d}.badge.dr{background:#fde8d4;color:#7c2d12}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#pv{position:fixed;inset:0;background:rgba(20,10,16,.85);overflow:auto;z-index:99;padding:14px}
+#pv .box{max-width:680px;margin:0 auto;background:#fff;color:#241a1f;border-radius:16px;padding:18px 18px 22px}
+#pv .ban{background:#7c2d12;color:#fff;border-radius:10px;padding:8px 12px;font-weight:800;font-size:.85rem;margin-bottom:12px}
+#pv .q,#pv .a{padding:10px 12px;border-radius:12px;margin:8px 0;line-height:1.5}
+#pv .q{background:#f4ecef}#pv .a{background:#fdf1e6}
+#pv .q span,#pv .a span{display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;opacity:.7}
+#pv .urg{background:#fff3f3;border:1px solid #f2b8b8;border-radius:10px;padding:10px 12px;margin:12px 0}
+#pv ul,#pv ol{padding-left:20px;line-height:1.55}
+label.check{display:flex;gap:8px;align-items:flex-start;margin:8px 0}
+</style></head>
+<body><section><div class="wrap"><p><a href="index.html">Admin home</a></p><h1>Virtual Conversations</h1><p id="msg" class="note" role="status"></p>
+<p class="todo">How publishing works: 1) Edit a draft and tick every review box once Dr. Sandesh has approved it. 2) Press Preview to see it exactly as visitors will. 3) Press Publish. Nothing is visible on the public website until it is published, and the database refuses to publish while any review box is unticked. Fictional educational conversations only; never real patient stories.</p>
+<p><button class="btn" id="new" type="button">New conversation</button></p><form id="f" hidden></form><div id="list" class="grid"></div></div></section>
+<div id="pv" hidden></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script><script src="../js/supabase-config.js"></script><script src="../js/ui.js"></script><script src="../js/admin-auth.js"></script>
-<script>(async function(){var sb=await adminReady;if(!sb)return;var r=await sb.from('patient_insights').select('*').eq('doctor_id',SUPABASE_CONFIG.doctorId).order('created_at',{ascending:false});var L=document.getElementById('list');if(r.error){document.getElementById('msg').textContent='Could not load.';return;}r.data.forEach(function(x){L.appendChild(el('div',{class:'card'},[el('h3',{text:x.title||'(untitled)'}),el('p',{class:'note',text:x.status})]));});})();</script></body></html>
+<script>
+/* Scoped to this doctor_id. Row Level Security on patient_insights refuses status='published' unless all review flags are true. */
+var TXT=[['title','text'],['slug','text'],['subtitle','text'],['topic','text'],['intro','area']];
+var FLAGS=[['consent_confirmed','Consent confirmed (or content is purely educational, no real patient)'],['identifiers_removed','All identifiers removed'],['no_identifying_details','No identifying details remain'],['anonymous_confirmed','Anonymous'],['privacy_reviewed','Privacy reviewed'],['medical_reviewed','Medically reviewed by Dr. Sandesh'],['final_reviewed','Final review done by Dr. Sandesh'],['urgent_reviewed','Urgent-care text reviewed (needed only if urgent text is filled)']];
+(async function(){var sb=await adminReady;if(!sb)return;var did=SUPABASE_CONFIG.doctorId,msg=document.getElementById('msg'),F=document.getElementById('f'),L=document.getElementById('list'),PV=document.getElementById('pv'),cur=null;
+function lines(a){return(Array.isArray(a)?a:[]).map(function(x){return typeof x==='string'?x:(x.text||x.title||'');}).join('\n');}
+function dlg(a){return(Array.isArray(a)?a:[]).map(function(d){return 'Q: '+(d.q||'')+'\nA: '+(d.a||'');}).join('\n');}
+function parseDlg(t){var out=[],c=null;t.split('\n').forEach(function(l){l=l.trim();if(!l)return;var m=l.match(/^(Q|A)\s*:\s*(.*)$/i);if(!m){if(c){if(c.a!==undefined)c.a+=' '+l;else c.q+=' '+l;}return;}if(m[1].toUpperCase()==='Q'){c={q:m[2]};out.push(c);}else{if(!c){c={q:''};out.push(c);}c.a=(c.a?c.a+' ':'')+m[2];}});return out;}
+function split(t){return t.split('\n').map(function(s){return s.trim();}).filter(Boolean);}
+function area(n,v,r,h){var t=el('textarea',{name:n,rows:r||'4'});t.value=v||'';if(h)t.placeholder=h;return t;}
+function ready(x){return FLAGS.slice(0,7).every(function(d){return x[d[0]];})&&(!x.urgent||x.urgent_reviewed);}
+function form(x){cur=x;F.textContent='';F.hidden=false;var v=x||{};
+TXT.forEach(function(d){var i=d[1]==='area'?area(d[0],v[d[0]]):el('input',{name:d[0]});if(d[1]!=='area')i.value=v[d[0]]||'';F.appendChild(el('label',{text:d[0]},[i]));});
+F.appendChild(el('label',{text:'conversation: Q: question, then A: answer, repeated'},[area('dialogue',dlg(v.dialogue),'10','Q: ...\nA: ...')]));
+F.appendChild(el('label',{text:'relate intro'},[area('relate_intro',v.relate_intro,'2')]));
+F.appendChild(el('label',{text:'relate points (one per line)'},[area('relate_points',lines(v.relate_points),'4')]));
+F.appendChild(el('label',{text:'relate close'},[area('relate_close',v.relate_close,'2')]));
+F.appendChild(el('label',{text:'practical next steps (one per line)'},[area('action_points',lines(v.action_points),'4')]));
+F.appendChild(el('label',{text:'urgent-care information (only if doctor-approved)'},[area('urgent',v.urgent,'3')]));
+F.appendChild(el('p',{class:'note',text:'Review boxes (tick only after Dr. Sandesh has approved):'}));
+FLAGS.forEach(function(d){var i=el('input',{type:'checkbox',name:d[0]});i.checked=!!v[d[0]];F.appendChild(el('label',{class:'check'},[i,d[1]]));});
+var c=el('button',{class:'btn alt',type:'button',text:'Cancel'});c.onclick=function(){F.hidden=true;};
+F.appendChild(el('div',{class:'acts'},[el('button',{class:'btn',type:'submit',text:'Save'}),c]));}
+F.onsubmit=async function(e){e.preventDefault();var g=function(n){return F.elements[n];},o={};
+TXT.forEach(function(d){o[d[0]]=g(d[0]).value.trim();});
+o.dialogue=parseDlg(g('dialogue').value);o.relate_intro=g('relate_intro').value;o.relate_points=split(g('relate_points').value);o.relate_close=g('relate_close').value;o.action_points=split(g('action_points').value);o.urgent=g('urgent').value.trim();
+FLAGS.forEach(function(d){o[d[0]]=g(d[0]).checked;});
+if(!o.title||!o.slug){msg.textContent='Title and slug are required.';return;}
+var r;if(cur){o.status=cur.status;r=await sb.from('patient_insights').update(o).eq('id',cur.id).eq('doctor_id',did);}else{o.status='draft';o.is_demo=false;r=await sb.from('patient_insights').insert(Object.assign({doctor_id:did},o));}
+msg.textContent=r.error?'Save failed: '+r.error.message:'Saved. Status unchanged; use Publish when ready.';if(!r.error){F.hidden=true;load();}};
+document.getElementById('new').onclick=function(){form(null);};
+async function setStatus(x,status){var o={status:status},now=new Date().toISOString();
+if(status==='published'){if(!ready(x)){msg.textContent='Cannot publish yet: open Edit and tick every review box (and the urgent-care box if urgent text is filled).';window.scrollTo(0,0);return false;}if(!x.published_at)o.published_at=now;o.final_reviewed_at=now;o.is_demo=false;}
+var r=await sb.from('patient_insights').update(o).eq('id',x.id).eq('doctor_id',did);
+msg.textContent=r.error?'Failed: '+r.error.message:(status==='published'?'Published. It is now live on the website.':'Moved to '+status+'. No longer visible on the website.');load();return !r.error;}
+function closePv(){PV.hidden=true;PV.textContent='';document.body.style.overflow='';}
+function preview(x){PV.textContent='';var b=el('div',{class:'box'});
+b.appendChild(el('div',{class:'ban',text:'PREVIEW ONLY. '+(x.status==='published'?'This is live on the website.':'This is NOT live. Only you can see it.')}));
+b.appendChild(el('p',{class:'eyebrow',text:x.topic||'OBGYN'}));b.appendChild(el('h2',{text:'\u201c'+(x.title||'')+'\u201d'}));if(x.subtitle)b.appendChild(el('p',{class:'note',text:x.subtitle}));if(x.intro)b.appendChild(el('p',{text:x.intro}));
+(x.dialogue||[]).forEach(function(d){if(d.q)b.appendChild(el('div',{class:'q'},[el('span',{text:'Dr. Sandesh'}),d.q]));if(d.a)b.appendChild(el('div',{class:'a'},[el('span',{text:'Patient (Illustrative)'}),d.a]));});
+var rp=Array.isArray(x.relate_points)?x.relate_points:[];if(x.relate_intro||rp.length){b.appendChild(el('h3',{text:'Does this sound familiar?'}));if(x.relate_intro)b.appendChild(el('p',{text:x.relate_intro}));if(rp.length){var u=el('ul');rp.forEach(function(p){u.appendChild(el('li',{text:p}));});b.appendChild(u);}if(x.relate_close)b.appendChild(el('p',{text:x.relate_close}));}
+var ap=Array.isArray(x.action_points)?x.action_points:[];if(ap.length){b.appendChild(el('h3',{text:'What you can do'}));var o=el('ol');ap.forEach(function(p){o.appendChild(el('li',{text:p}));});b.appendChild(o);}
+if(x.urgent)b.appendChild(el('div',{class:'urg'},[el('strong',{text:'When to seek urgent care: '}),x.urgent]));
+b.appendChild(el('p',{class:'note',text:'This is a fictional, educational conversation. It is not a real patient story or testimonial, and does not replace an individual medical consultation.'}));
+var acts=el('div',{class:'acts'});var cl=el('button',{class:'btn alt',type:'button',text:'Close preview'});cl.onclick=closePv;
+if(x.status!=='published'){var pb=el('button',{class:'btn',type:'button',text:ready(x)?'Publish now':'Publish (review boxes incomplete)'});pb.onclick=async function(){if(!ready(x)){closePv();msg.textContent='Open Edit and tick every review box first.';return;}if(!confirm('Publish this conversation on the live website?'))return;if(await setStatus(x,'published'))closePv();};acts.appendChild(pb);}
+acts.appendChild(cl);b.appendChild(acts);PV.appendChild(b);PV.hidden=false;PV.scrollTop=0;document.body.style.overflow='hidden';}
+async function load(){var r=await sb.from('patient_insights').select('*').eq('doctor_id',did).order('created_at',{ascending:false});if(r.error){msg.textContent='Could not load.';return;}L.textContent='';
+if(!r.data.length)L.appendChild(el('p',{class:'note',text:'No conversations yet.'}));
+r.data.forEach(function(x){var st=el('span',{class:'badge '+(x.status==='published'?'pub':'dr'),text:x.status==='published'?'LIVE':(x.status==='archived'?'ARCHIVED':'DRAFT')});var chips=[st];if(x.is_demo)chips.push(el('span',{class:'badge',text:'sample'}));chips.push(el('span',{class:'badge',text:ready(x)?'review complete':'review pending'}));
+var pv=el('button',{class:'btn alt',type:'button',text:'Preview'});pv.onclick=function(){preview(x);};
+var ed=el('button',{class:'btn alt',type:'button',text:'Edit / review'});ed.onclick=function(){form(x);window.scrollTo(0,0);};
+var acts=el('div',{class:'acts'},[pv,ed]);
+if(x.status==='published'){var un=el('button',{class:'btn alt',type:'button',text:'Unpublish'});un.onclick=function(){setStatus(x,'draft');};acts.appendChild(un);}else{var pu=el('button',{class:'btn',type:'button',text:'Publish'});pu.onclick=async function(){if(!ready(x)){msg.textContent='Cannot publish yet: open Edit / review and tick every review box.';window.scrollTo(0,0);return;}if(confirm('Publish this conversation on the live website?'))setStatus(x,'published');};acts.appendChild(pu);}
+var d=el('button',{class:'btn alt',type:'button',text:'Delete'});d.onclick=async function(){if(!confirm('Delete permanently?'))return;var z=await sb.from('patient_insights').delete().eq('id',x.id).eq('doctor_id',did);msg.textContent=z.error?'Delete failed.':'Deleted.';load();};acts.appendChild(d);
+L.appendChild(el('div',{class:'card'},[el('h3',{text:x.title||'(untitled)'}),el('p',{},chips),el('p',{class:'note',text:x.topic||''}),acts]));});}
+load();})();
+</script></body></html>
